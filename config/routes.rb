@@ -1,4 +1,8 @@
 MyApp::Application.routes.draw do
+  get "shaders/index"
+
+  match 'login' => 'sessions#login'
+  match 'logout' => 'sessions#logout'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -55,4 +59,6 @@ MyApp::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
+
+  root :to => 'shaders#index'
 end

@@ -1,0 +1,22 @@
+<div id="user-info">
+<% if flash[:notice] %>
+  <%= flash[:notice] %>
+<% end %>
+</div>
+<% if @user %>
+    <div id="logout">
+      <a href="/logout">Logout</a>
+    </div>
+    <div class="clearfix">
+      <div id="user-info">
+        <b>Hello <%= @user[:name] %></b>
+      </div>
+    </div>
+<% else %>
+    <div id="logout" class="hide">
+      <a href="/logout">Logout</a>
+    </div>
+    <div id="login">
+      <a class="janrainEngage" href="#">Sign-In</a>
+    </div>
+<% end %>

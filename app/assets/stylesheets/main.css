@@ -1,0 +1,32 @@
+#logout {
+    float: right;
+}
+
+#login {
+  float: right;
+}
+
+#user-info {
+    overflow-x: auto;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.header {
+    float: left;
+}
+
+.hide {
+    display: none;
+}
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
