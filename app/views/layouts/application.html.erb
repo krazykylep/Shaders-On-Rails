@@ -7,8 +7,32 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div class="topbar">
+  <div class="topbar_content">
+    <div class="topbar_title">Fractals</div>
+    <div class="topbar_button">
+      <% loginMessage = (@user[:name] if @user) || "Logged In" %>
+      <% if @user %>
+        <% hideUserLink = "" %>
+        <% hideLoginLink = "hide" %>
+      <% else %>
+        <% hideUserLink = "hide" %>
+        <% hideLoginLink = "" %>
+      <% end %>
+      <a id="userLink" class="<%= hideUserLink %>" href="#"><%= loginMessage %></a>
+      <a id="loginLink" class="janrainEngage <%= hideLoginLink %>" href="#">Login</a>
+    </div>
+    <div class="topbar_button"><a id="newFractal" href="#">New</a></div>
+    <div id="userMenu" class="topbar_button clearfix rounded-corners hide">
+      <a id="logoutLink" href="logout">Logout</a>
+    </div>
+  </div>
+</div>
+<div class="content">
 
 <%= yield %>
+
+</div>
 
 </body>
 </html>

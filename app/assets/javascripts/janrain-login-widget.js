@@ -67,10 +67,8 @@ function janrainWidgetOnload() {
       data: "token="+tokenResponse.token,
       dataType: "json",
       success: function(user){
-        //$("#janrainEngageEmbed").css("display", "none");
-        $("#login").css("display", "none");
-        $("#logout").css("display", "block");
-        $("#user-info").html("<b>Hello "+user.name+"</b>");
+        $("#userLink").removeClass("hide").text(user.name || "Logged In");
+        $("#loginLink").addClass("hide");
         closeModal();
       }
     });

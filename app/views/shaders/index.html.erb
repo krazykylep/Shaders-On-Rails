@@ -3,20 +3,43 @@
   <%= flash[:notice] %>
 <% end %>
 </div>
-<% if @user %>
-    <div id="logout">
-      <a href="/logout">Logout</a>
+
+<div id="shaders">
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+<div class="shader"><img src="http://www.coolmath.com/fractals/images/fractal21.gif"><span>Test</span></div>
+</div>
+
+<div id="modal" title="Editor" style="display: none;">
+    <div>
+        <div style="margin-bottom: 10px;">
+            Title: <input type="text" id="canvasName" value="Untitled"> Author: <input type="text" id="canvasAuthor" value="Anonymous"><br>
+            Dim: <input type="text" size="3" id="canvasWidth" value="400"> X <input type="text" size="3" id="canvasHeight" value="284"> <button id="dimensionBtn">Apply</button>
+            <table style="width: 95%;">
+                <tr><td>
+                    Quality:
+                </td><td style="width: 80%">
+                    <div id="quality"></div>
+                </td></tr>
+            </table>
+        </div>
+        <div id="canvasContainer" style="text-align: center"></div>
     </div>
-    <div class="clearfix">
-      <div id="user-info">
-        <b>Hello <%= @user[:name] %></b>
-      </div>
+    <div id="codeDiv" style="height: 100%;">
+        <button id="runBtn">Compile &amp; Run</button>
+        <div id="editor" style="color: #ffffff; height: 85%;"></div>
     </div>
-<% else %>
-    <div id="logout" class="hide">
-      <a href="/logout">Logout</a>
-    </div>
-    <div id="login">
-      <a class="janrainEngage" href="#">Sign-In</a>
-    </div>
-<% end %>
+</div>
