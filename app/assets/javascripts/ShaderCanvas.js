@@ -6,15 +6,12 @@ void main() {\n\
     gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n\
 }';
 
-  var defaultFragmentShader = '#ifdef GL_ES\n\
-precision highp float;\n\
-#endif\n\
-\n\
-uniform vec2 size;\n\
+  var defaultFragmentShader = 'uniform vec2 size;\n\
+uniform float time;\n\
 \n\
 void main(void) {\n\
     vec4 pos = gl_FragCoord;\n\
-    float red = pos.x / size.x;\n\
+    float red = sin(time);\n\
     float green = pos.y / size.y;\n\
     float blue = 1.0 - red - green;\n\
     float alpha = 1.0;\n\
@@ -34,6 +31,9 @@ void main(void) {\n\
   this.canvasElement.innerHTML = options.canvasInnerHTML || "Please use a Canvas and WebGL enabled browser like Google Chrome.";
   this.containerElement.appendChild(this.canvasElement);
   this.setDimensions(this.width, this.height);
+  this.animating = false;
+  this.animationTime;
+  this.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
   try {
     this.gl = this.canvasElement.getContext("webgl", this.canvasOptions);
@@ -71,6 +71,13 @@ ShaderCanvas.prototype.setFragmentShader = function(shader) {
   this.fragmentShaderSrc = shader;
 }
 
+ShaderCanvas.prototype.fixShader = function(shader) {
+  if (!shader.match(/precision+(\s+)+highp+(\s+)+float/i)) {
+    shader = "#ifdef GL_ES \n precision highp float; \n #endif \n" + shader;
+  }
+  return shader;
+}
+
 ShaderCanvas.prototype.compileShaders = function(){
   var gl = this.gl;
   if (!gl) {
@@ -79,8 +86,8 @@ ShaderCanvas.prototype.compileShaders = function(){
 
   var newShaderProgram = gl.createProgram();
 
-  var fragmentShaderSrc = this.fragmentShaderSrc;
-  var vertexShaderSrc = this.vertexShaderSrc;
+  var fragmentShaderSrc = this.fixShader(this.fragmentShaderSrc);
+  var vertexShaderSrc = this.fixShader(this.vertexShaderSrc);
 
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -128,11 +135,22 @@ ShaderCanvas.prototype.compileShaders = function(){
   return;
 }
 
-ShaderCanvas.prototype.draw = function(){
+ShaderCanvas.prototype.draw = function(time){
   var gl = this.gl;
-  if(!gl || !gl.shaderProgram) {
+  if (!gl || !gl.shaderProgram) {
     return;
   }
+  if (time === undefined && this.animating) {
+    this.animate();
+    return;
+  }
+  if (this.animationTime === null && time !== undefined) {
+    this.animationTime = time-1;
+  }
+  this.animationTime = Math.min(time-1, this.animationTime);
+
+
+  time = time !== undefined ? time - this.animationTime : 1;
 
   var width = parseInt(this.canvasElement.getAttribute('width'));
   var height = parseInt(this.canvasElement.getAttribute('height'));
@@ -140,20 +158,37 @@ ShaderCanvas.prototype.draw = function(){
 
   gl.useProgram(gl.shaderProgram);
 
-  var posAttribLoc = gl.getAttribLocation(gl.shaderProgram, "pos");
-  var sizeAttribLoc = gl.getUniformLocation(gl.shaderProgram, "size");
+  var posLoc = gl.getAttribLocation(gl.shaderProgram, "pos");
+  var sizeLoc = gl.getUniformLocation(gl.shaderProgram, "size");
+  var timeLoc = gl.getUniformLocation(gl.shaderProgram, "time");
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.mainBuffer);
 
-  if(sizeAttribLoc) {
-    gl.uniform2f(sizeAttribLoc, width, height);
+  if (timeLoc) {
+    gl.uniform1f(timeLoc, time/300);
   }
 
-  gl.vertexAttribPointer(posAttribLoc, 2, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(posAttribLoc);
+  if (sizeLoc) {
+    gl.uniform2f(sizeLoc, width, height);
+  }
+
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(posLoc);
 
   gl.drawArrays(gl.TRIANGLES, 0, 6);
-  gl.disableVertexAttribArray(posAttribLoc);
+  gl.disableVertexAttribArray(posLoc);
+
+  if (typeof this.oneTimeDrawCallback === 'function') {
+    this.oneTimeDrawCallback();
+    this.oneTimeDrawCallback = null;
+  }
+
+  if (this.animating) {
+    var self = this;
+    this.requestAnimationFrame.call(window, function(time){
+      self.draw(time);
+    });
+  }
 }
 
 ShaderCanvas.prototype.setDimensions = function(width, height) {
@@ -166,7 +201,9 @@ ShaderCanvas.prototype.setDimensions = function(width, height) {
     canvas.style.width = width+'px';
     canvas.style.height = height+'px';
   }
-  this.draw();
+  if (!this.animating) {
+    this.draw();
+  }
 }
 
 ShaderCanvas.prototype.setQuality = function(quality) {
@@ -180,5 +217,20 @@ ShaderCanvas.prototype.setQuality = function(quality) {
   canvas.setAttribute("width", Math.floor(realWidth * quality));
   canvas.setAttribute("height", Math.floor(realHeight * quality));
 
-  this.draw();
+  if (!this.animating) {
+    this.draw();
+  }
+}
+
+ShaderCanvas.prototype.animate = function(){
+  this.animating = true;
+  this.animationTime = null;
+  var self = this;
+  this.requestAnimationFrame.call(window, function(time){
+    self.draw(time);
+  });
+}
+
+ShaderCanvas.prototype.stopAnimation = function() {
+  this.animating = false;
 }
