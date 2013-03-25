@@ -6,7 +6,11 @@ void main() {\n\
     gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n\
 }';
 
-  var defaultFragmentShader = 'uniform vec2 size;\n\
+  var defaultFragmentShader = '#ifdef GL_ES\n\
+precision highp float;\n\
+#endif\n\
+\n\
+uniform vec2 size;\n\
 uniform float time;\n\
 \n\
 void main(void) {\n\
@@ -58,24 +62,11 @@ void main(void) {\n\
 }
 
 ShaderCanvas.prototype.setVertexShader = function(shader) {
-  if (!shader.match(/precision+(\s+)+highp+(\s+)+float/i)) {
-    shader = "#ifdef GL_ES \n precision highp float; \n #endif \n" + shader;
-  }
   this.vertexShaderSrc = shader;
 }
 
 ShaderCanvas.prototype.setFragmentShader = function(shader) {
-  if (!shader.match(/precision+(\s+)+highp+(\s+)+float/i)) {
-    shader = "#ifdef GL_ES \n precision highp float; \n #endif \n" + shader;
-  }
   this.fragmentShaderSrc = shader;
-}
-
-ShaderCanvas.prototype.fixShader = function(shader) {
-  if (!shader.match(/precision+(\s+)+highp+(\s+)+float/i)) {
-    shader = "#ifdef GL_ES \n precision highp float; \n #endif \n" + shader;
-  }
-  return shader;
 }
 
 ShaderCanvas.prototype.compileShaders = function(){
@@ -86,8 +77,8 @@ ShaderCanvas.prototype.compileShaders = function(){
 
   var newShaderProgram = gl.createProgram();
 
-  var fragmentShaderSrc = this.fixShader(this.fragmentShaderSrc);
-  var vertexShaderSrc = this.fixShader(this.vertexShaderSrc);
+  var fragmentShaderSrc = this.fragmentShaderSrc;
+  var vertexShaderSrc = this.vertexShaderSrc;
 
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);

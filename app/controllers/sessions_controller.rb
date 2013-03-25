@@ -62,6 +62,7 @@ class SessionsController < ApplicationController
         if user.length == 0
           user = User.new(userData)
           user.save
+          userData[:user_id] = user.id
           session[:user] = userData
         else
           session[:user] = makeHashFromUser(user)
@@ -86,6 +87,7 @@ class SessionsController < ApplicationController
     if (user.length > 0)
       user = user[0]
       return {
+        :user_id => user.id,
         :identifier => user.identifier,
         :name => user.name,
         :email => user.email

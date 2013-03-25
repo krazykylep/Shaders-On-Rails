@@ -1,8 +1,9 @@
 MyApp::Application.routes.draw do
-  get "shaders/index"
-
   match 'login' => 'sessions#login'
   match 'logout' => 'sessions#logout'
+
+  post 'new' => 'shaders#new'
+  get 'get' => 'shaders#get'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
