@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MyApp</title>
+  <title>Shaders</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -9,7 +9,7 @@
 <body>
 <div class="topbar">
   <div class="topbar_content">
-    <div class="topbar_title">Shaders</div>
+    <div class="topbar_title"><a href="/">Shaders</a></div>
     <div class="topbar_button">
       <% loginMessage = (@user[:name] if @user) || "Logged In" %>
       <% if @user %>
@@ -24,6 +24,7 @@
     </div>
     <div class="topbar_button"><a id="newShader" href="#">New</a></div>
     <div id="userMenu" class="topbar_button clearfix rounded-corners hide">
+      <a id="userShadersLink" href="mine">My Shaders</a>
       <a id="logoutLink" href="logout">Logout</a>
     </div>
   </div>

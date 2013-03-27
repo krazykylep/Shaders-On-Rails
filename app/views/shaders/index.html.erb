@@ -4,7 +4,12 @@
 <% end %>
 </div>
 
-<div id="shaders"></div>
+<% if @userId %>
+    <h1 class='pageTitle'>Your Shaders</h1>
+    <div id="shaders" data-id="<%= @userId %>"></div>
+<% else %>
+    <div id="shaders"></div>
+<% end %>
 
 <div id="modal" title="Editor" style="display: none;">
     <div>

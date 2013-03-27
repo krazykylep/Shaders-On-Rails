@@ -31,11 +31,29 @@ class ShadersController < ApplicationController
   end
 
   def get
-    offset = params[:offset]
+    offset = params[:offset].to_i
     number = params[:number].to_i || 16;
     number = [[number, 16].min, 1].max
+    params[:userId] = params[:userId].to_i if params[:userId]
 
-    shaders = Shader.limit(number).offset(offset).reverse_order
+    if params[:userId]
+      user = User.find(params[:userId])
+      shaders = user.Shaders.limit(number).offset(offset).reverse_order
+    else
+      shaders = Shader.limit(number).offset(offset).reverse_order
+    end
     render :json => shaders
+  end
+
+  def mine
+    if !session[:user]
+      redirect_to :action => 'index'
+      return
+    end
+
+    @user = User.find(session[:user][:user_id])
+    @userId = @user.id
+
+    render :action => 'index'
   end
 end

@@ -2,6 +2,8 @@ MyApp::Application.routes.draw do
   match 'login' => 'sessions#login'
   match 'logout' => 'sessions#logout'
 
+  match 'mine' => 'shaders#mine'
+
   post 'new' => 'shaders#new'
   get 'get' => 'shaders#get'
   # The priority is based upon order of creation:

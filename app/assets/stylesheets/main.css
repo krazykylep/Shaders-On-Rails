@@ -1,6 +1,7 @@
 #userMenu {
   background: #fff;
   margin-top: 5px;
+  position: absolute;
 }
 
 #userMenu a {
@@ -27,16 +28,21 @@
   height: 85%;
 }
 
+.pageTitle {
+  font-size: 28px;
+  margin-left: 20px;
+}
+
 .clearfix {
-    clear: both;
+  clear: both;
 }
 
 .header {
-    float: left;
+  float: left;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .topbar {
@@ -91,6 +97,10 @@
   width: 940px;
   margin: 0 auto;
   font-size: 0em;
+}
+
+.message {
+  font-size: 24px;
 }
 
 .shader {

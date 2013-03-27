@@ -76,21 +76,30 @@ $(function(){
         });
     }
 
-    function fetchShaders() {
-        this.offset = this.offset === undefined ? 0 : this.offset;
+    function fetchShaders(userId) {
+        fetchShaders.offset = fetchShaders.offset === undefined ? 0 : fetchShaders.offset;
+        var data = {
+            number: 16,
+            offset: fetchShaders.offset
+        }
+        if (userId) {
+            data.userId = userId;
+        }
+        var firstFetch = fetchShaders.offset === 0;
         $.ajax({
             type: 'GET',
             url: '/get',
-            data: {
-                number: 16,
-                offset: this.offset
-            },
+            data: data,
             dataType: 'json',
             success: function(data){
-                appendShaders(data);
+                if (firstFetch && data.length === 0) {
+                    $("#shaders").html("<span class='message'>You have no shaders.</span>");
+                } else {
+                    appendShaders(data);
+                }
             }
         });
-        this.offset += 16;
+        fetchShaders.offset += 16;
     }
 
     function getLatestShader() {
@@ -257,7 +266,14 @@ $(function(){
 
     $("#userLink").click(function(event){
         event.preventDefault();
-        $("#userMenu").css("width", $("#userLink").width()).slideToggle();
+        var userLink = $("#userLink");
+        var userLinkPosition = userLink.position();
+        var userMenu = $("#userMenu");
+        userMenu.css({
+            top: userLinkPosition.top+20+"px",
+            left: userLinkPosition.left+"px"
+        });
+        userMenu.css("width", userLink.width()).slideToggle();
     });
 
     var codeMirror = CodeMirror($("#editor")[0], {
@@ -291,5 +307,6 @@ void main(void) {\n\
     gl_FragColor = vec4(red, green, blue, alpha);\n\
 }';
 
-    fetchShaders();
+    var possibleUserId = $("#shaders").attr("data-id");
+    fetchShaders(possibleUserId);
 });
